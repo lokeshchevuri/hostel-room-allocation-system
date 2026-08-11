@@ -26,6 +26,12 @@ export default function RoomsPage({ showToast }) {
   // Selected Room Occupants Modal
   const [activeOccupantRoom, setActiveOccupantRoom] = useState(null);
 
+  // Delete Room Modal State
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedDeleteRoomId, setSelectedDeleteRoomId] = useState('');
+  const [deletingRoom, setDeletingRoom] = useState(false);
+  const [deleteModalError, setDeleteModalError] = useState('');
+
   const fetchRooms = async () => {
     try {
       setLoading(true);
@@ -96,8 +102,6 @@ export default function RoomsPage({ showToast }) {
       return;
     }
 
-    if (!window.confirm(`Are you sure you want to delete Room ${roomNo}?`)) return;
-
     try {
       const res = await fetch(`/api/rooms/${roomId}`, {
         method: 'DELETE',
@@ -146,10 +150,17 @@ export default function RoomsPage({ showToast }) {
           </p>
         </div>
 
-        <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
-          <Plus size={18} />
-          <span>Add New Room</span>
-        </button>
+        {/* Action Header Buttons */}
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
+            <Plus size={18} />
+            <span>Add New Room</span>
+          </button>
+          <button onClick={() => { setIsDeleteModalOpen(true); setDeleteModalError(''); }} className="btn btn-danger">
+            <Trash2 size={18} />
+            <span>Delete Room</span>
+          </button>
+        </div>
       </div>
 
       {/* Advanced Filters */}
@@ -240,7 +251,7 @@ export default function RoomsPage({ showToast }) {
                       <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)' }}>
                         Room {room.roomNo}
                       </span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', background: 'rgba(255, 255, 255, 0.05)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', background: 'var(--bg-card-hover)', padding: '0.15rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
                         {room.floor === 0 ? 'Ground' : `Floor ${room.floor}`}
                       </span>
                     </div>
@@ -248,10 +259,10 @@ export default function RoomsPage({ showToast }) {
                   </div>
 
                   {/* Bed Breakdown Info */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', padding: '0.85rem', background: 'rgba(15, 23, 42, 0.5)', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', padding: '0.85rem', background: 'var(--input-bg)', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center', border: '1px solid var(--border-color)' }}>
                     <div>
                       <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)' }}>CAPACITY</span>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>{room.capacity}</span>
+                      <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>{room.capacity}</span>
                     </div>
                     <div>
                       <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)' }}>OCCUPIED</span>
@@ -265,7 +276,7 @@ export default function RoomsPage({ showToast }) {
 
                   {/* Visual Occupancy Bar */}
                   <div style={{ marginBottom: '1rem' }}>
-                    <div style={{ width: '100%', height: '8px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '6px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '8px', background: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
                       <div style={{
                         width: `${occupancyPercentage}%`,
                         height: '100%',
@@ -278,23 +289,14 @@ export default function RoomsPage({ showToast }) {
                 </div>
 
                 {/* Bottom Row Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.85rem', borderTop: 'var(--glass-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingTop: '0.85rem', borderTop: 'var(--glass-border)' }}>
                   <button
                     onClick={() => setActiveOccupantRoom(room)}
                     className="btn btn-secondary btn-sm"
-                    style={{ fontSize: '0.82rem' }}
+                    style={{ fontSize: '0.85rem', width: '100%', justifyContent: 'center' }}
                   >
-                    <Users size={14} />
+                    <Users size={15} />
                     <span>View Occupants ({room.occupants?.length || 0})</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleDeleteRoom(room._id, room.roomNo, room.occupied)}
-                    className="btn btn-danger btn-sm"
-                    title="Delete Room"
-                    disabled={room.occupied > 0}
-                  >
-                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -431,6 +433,76 @@ export default function RoomsPage({ showToast }) {
                 Close Window
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Room Modal */}
+      {isDeleteModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '1.25rem', color: 'var(--text-main)' }}>Delete Hostel Room</h3>
+
+            {deleteModalError && (
+              <div style={{
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                background: 'var(--status-full-bg)',
+                border: '1px solid var(--status-full)',
+                color: 'var(--status-full)',
+                fontSize: '0.85rem',
+                marginBottom: '1rem'
+              }}>
+                {deleteModalError}
+              </div>
+            )}
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              if (!selectedDeleteRoomId) {
+                setDeleteModalError('Please select a room to delete');
+                return;
+              }
+              const targetRoom = rooms.find(r => r._id === selectedDeleteRoomId);
+              if (!targetRoom) return;
+              if (targetRoom.occupied > 0) {
+                setDeleteModalError(`Cannot delete Room ${targetRoom.roomNo} because it currently has ${targetRoom.occupied} occupied beds.`);
+                return;
+              }
+              setDeletingRoom(true);
+              await handleDeleteRoom(targetRoom._id, targetRoom.roomNo, targetRoom.occupied);
+              setDeletingRoom(false);
+              setIsDeleteModalOpen(false);
+              setSelectedDeleteRoomId('');
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+                  SELECT ROOM TO DELETE *
+                </label>
+                <select
+                  required
+                  value={selectedDeleteRoomId}
+                  onChange={(e) => { setSelectedDeleteRoomId(e.target.value); setDeleteModalError(''); }}
+                  className="input-control select-control"
+                >
+                  <option value="">-- Choose a Room --</option>
+                  {rooms.map((r) => (
+                    <option key={r._id} value={r._id} disabled={r.occupied > 0}>
+                      Room {r.roomNo} (Floor {r.floor}) - {r.occupied > 0 ? `Occupied (${r.occupied} beds)` : 'Unoccupied (Can Delete)'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+                <button type="button" onClick={() => setIsDeleteModalOpen(false)} className="btn btn-secondary">
+                  Cancel
+                </button>
+                <button type="submit" disabled={deletingRoom || !selectedDeleteRoomId} className="btn btn-danger">
+                  {deletingRoom ? 'Deleting...' : 'Confirm Delete Room'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
