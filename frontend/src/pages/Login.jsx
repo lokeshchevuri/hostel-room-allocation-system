@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Building2, Lock, User, AlertCircle, ArrowRight } from 'lucide-react';
+import { Building2, Lock, User, AlertCircle, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +31,7 @@ export default function Login() {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Unable to connect to backend server. Please ensure the database server is running.');
+      setError('Unable to connect to backend server. Please check your network or server setup.');
     } finally {
       setLoading(false);
     }
@@ -43,60 +44,34 @@ export default function Login() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '1.5rem',
-      position: 'relative',
-      overflow: 'hidden'
+      backgroundColor: 'var(--bg-primary)',
     }}>
-      {/* Background Glow Effects */}
-      <div style={{
-        position: 'absolute',
-        top: '20%',
-        left: '20%',
-        width: '350px',
-        height: '350px',
-        borderRadius: '50%',
-        background: 'rgba(99, 102, 241, 0.25)',
-        filter: 'blur(80px)',
-        zIndex: 0,
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '20%',
-        right: '20%',
-        width: '350px',
-        height: '350px',
-        borderRadius: '50%',
-        background: 'rgba(6, 182, 212, 0.25)',
-        filter: 'blur(80px)',
-        zIndex: 0,
-      }} />
-
       <div className="glass-panel animate-fade-in" style={{
         width: '100%',
-        maxWidth: '440px',
+        maxWidth: '430px',
         padding: '2.5rem',
-        position: 'relative',
-        zIndex: 1
+        boxShadow: 'var(--shadow-lg)'
       }}>
         {/* Header Icon */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '20px',
-            background: 'var(--accent-gradient)',
+            width: '56px',
+            height: '56px',
+            borderRadius: '14px',
+            background: 'var(--accent-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 1.25rem',
-            boxShadow: '0 8px 24px var(--accent-glow)'
+            margin: '0 auto 1rem',
+            boxShadow: 'var(--shadow-md)'
           }}>
-            <Building2 size={32} color="#ffffff" />
+            <Building2 size={28} color="#ffffff" />
           </div>
-          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.4rem', color: 'var(--text-main)' }}>
-            Admin Portal Login
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.3rem', color: 'var(--text-main)' }}>
+            Hostel Portal Login
           </h2>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-            Hostel Room Allocation System
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            College Room Allocation Administration
           </p>
         </div>
 
@@ -108,9 +83,9 @@ export default function Login() {
             gap: '0.6rem',
             padding: '0.85rem 1rem',
             borderRadius: '10px',
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#ef4444',
+            background: 'var(--status-full-bg)',
+            border: '1px solid var(--status-full)',
+            color: 'var(--status-full)',
             fontSize: '0.85rem',
             marginBottom: '1.5rem'
           }}>
@@ -122,7 +97,7 @@ export default function Login() {
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
               ADMIN USERNAME
             </label>
             <div style={{ position: 'relative' }}>
@@ -132,7 +107,7 @@ export default function Login() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter admin username"
+                placeholder="Enter username"
                 className="input-control"
                 style={{ paddingLeft: '2.75rem' }}
               />
@@ -140,20 +115,41 @@ export default function Login() {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
               PASSWORD
             </label>
             <div style={{ position: 'relative' }}>
               <Lock size={18} color="var(--text-subtle)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 className="input-control"
-                style={{ paddingLeft: '2.75rem' }}
+                style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '0.85rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-subtle)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -161,7 +157,7 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className="btn btn-primary"
-            style={{ width: '100%', padding: '0.85rem', marginTop: '0.5rem' }}
+            style={{ width: '100%', padding: '0.8rem', marginTop: '0.5rem', fontSize: '0.95rem' }}
           >
             {loading ? 'Authenticating...' : (
               <>
