@@ -65,7 +65,7 @@ export default function Navbar({ currentTheme, toggleTheme, isSidebarOpen, toggl
               style={{ borderRadius: '50%', width: '38px', height: '38px', padding: 0 }}
               title={`Switch to ${currentTheme === 'dark' ? 'Light' : 'Dark'} Mode`}
             >
-              {currentTheme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#10b981" />}
+              {currentTheme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="var(--accent-primary)" />}
             </button>
 
             {/* Admin Profile & Account Settings Button */}

@@ -1,19 +1,19 @@
 @charset "UTF-8";
 
-/* --- Emerald Green Institutional College Theme --- */
+/* --- Sand, Warm Espresso Black & Gold-Bronze Theme --- */
 :root {
-  /* Dark Theme (Default) */
-  --bg-primary: #06130e;
-  --bg-surface: #0e2018;
-  --bg-card: #132a21;
-  --bg-card-hover: #1b382d;
-  --bg-glass: rgba(14, 32, 24, 0.9);
+  /* Dark Theme (Warm Obsidian & Amber Sand) */
+  --bg-primary: #12100e;
+  --bg-surface: #1a1714;
+  --bg-card: #24201c;
+  --bg-card-hover: #2e2924;
+  --bg-glass: rgba(26, 23, 20, 0.9);
 
-  --accent-primary: #10b981;
-  --accent-primary-hover: #059669;
-  --accent-secondary: #0d9488;
-  --accent-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #0d9488 100%);
-  --accent-glow: rgba(16, 185, 129, 0.25);
+  --accent-primary: #d97706;
+  --accent-primary-hover: #b45309;
+  --accent-secondary: #c2410c;
+  --accent-gradient: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
+  --accent-glow: rgba(217, 119, 6, 0.25);
 
   --status-available: #10b981;
   --status-available-bg: rgba(16, 185, 129, 0.15);
@@ -22,14 +22,14 @@
   --status-full: #ef4444;
   --status-full-bg: rgba(239, 68, 68, 0.15);
 
-  --text-main: #f0fdf4;
-  --text-muted: #a7f3d0;
-  --text-subtle: #6ee7b7;
+  --text-main: #fef3c7;
+  --text-muted: #fde68a;
+  --text-subtle: #d97706;
   
-  --border-color: rgba(16, 185, 129, 0.25);
-  --border-focus: #10b981;
-  --input-bg: #091a13;
-  --table-header-bg: #0e231b;
+  --border-color: rgba(217, 119, 6, 0.25);
+  --border-focus: #f59e0b;
+  --input-bg: #171412;
+  --table-header-bg: #1c1815;
 
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -39,46 +39,46 @@
   --radius-lg: 20px;
   --radius-xl: 24px;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.45);
-  --glass-border: 1px solid rgba(16, 185, 129, 0.22);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --glass-border: 1px solid rgba(217, 119, 6, 0.22);
 }
 
-/* Light Theme (Fresh Emerald Porcelain) */
+/* Light Theme (Warm Sand Porcelain & Dark Charcoal/Walnut Black) */
 [data-theme='light'] {
-  --bg-primary: #f0fdf4;
+  --bg-primary: #fef8ee;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #f6fef9;
+  --bg-card-hover: #fffbeb;
   --bg-glass: rgba(255, 255, 255, 0.96);
 
-  --accent-primary: #059669;
-  --accent-primary-hover: #047857;
-  --accent-secondary: #0f766e;
-  --accent-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #0d9488 100%);
-  --accent-glow: rgba(5, 150, 105, 0.18);
+  --accent-primary: #b45309;
+  --accent-primary-hover: #78350f;
+  --accent-secondary: #92400e;
+  --accent-gradient: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+  --accent-glow: rgba(180, 83, 9, 0.18);
 
   --status-available: #047857;
   --status-available-bg: #dcfce7;
-  --status-partial: #d97706;
+  --status-partial: #b45309;
   --status-partial-bg: #fef3c7;
   --status-full: #dc2626;
   --status-full-bg: #fee2e2;
 
-  --text-main: #064e3b;
-  --text-muted: #047857;
-  --text-subtle: #059669;
+  --text-main: #1c1917;
+  --text-muted: #44403c;
+  --text-subtle: #78716c;
 
-  --border-color: #a7f3d0;
-  --border-focus: #059669;
-  --input-bg: #f0fdf4;
-  --table-header-bg: #dcfce7;
+  --border-color: #e7e5e4;
+  --border-focus: #b45309;
+  --input-bg: #fafaf9;
+  --table-header-bg: #fef3c7;
 
-  --glass-border: 1px solid #a7f3d0;
-  --shadow-sm: 0 2px 6px rgba(5, 150, 105, 0.08);
-  --shadow-md: 0 6px 18px rgba(5, 150, 105, 0.1);
-  --shadow-lg: 0 12px 30px rgba(5, 150, 105, 0.14);
+  --glass-border: 1px solid #e7e5e4;
+  --shadow-sm: 0 2px 6px rgba(28, 25, 23, 0.06);
+  --shadow-md: 0 6px 18px rgba(28, 25, 23, 0.08);
+  --shadow-lg: 0 12px 30px rgba(28, 25, 23, 0.12);
 }
 
 * {
