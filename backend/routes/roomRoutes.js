@@ -17,12 +17,24 @@ router.get('/', protect, async (req, res) => {
     const { search, floor, status, minAvailableBeds, maxCapacity } = req.query;
     const query = {};
 
-    // Case-insensitive search by Room Number or Status
+    // Case-insensitive search by Room Number, Status, or Occupant Student Name/RollNo
     if (search && search.trim() !== '') {
       const searchRegex = new RegExp(escapeRegex(search.trim()), 'i');
+      
+      // Find room IDs where occupant student matches name or roll number
+      const matchingAllocations = await Allocation.find({
+        $or: [
+          { studentName: searchRegex },
+          { studentRollNo: searchRegex }
+        ]
+      }).select('room');
+      
+      const matchingRoomIdsFromOccupants = matchingAllocations.map(a => a.room);
+
       query.$or = [
         { roomNo: searchRegex },
         { status: searchRegex },
+        { _id: { $in: matchingRoomIdsFromOccupants } }
       ];
     }
 

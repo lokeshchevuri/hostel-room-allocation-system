@@ -273,52 +273,125 @@ export default function RecordsPage({ showToast }) {
         </div>
       </div>
 
-      {/* Filtered Rooms Breakdown List */}
-      <div className="glass-panel" style={{ padding: '1.75rem' }}>
-        <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <DoorClosed size={20} color="var(--accent-secondary)" />
-          <span>Filtered Hostel Rooms & Current Occupants ({rooms.length})</span>
-        </h3>
-
-        {loading ? (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>Querying hostel database...</p>
-        ) : rooms.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No rooms matched your criteria.</p>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.25rem' }}>
-            {rooms.map((room) => (
-              <div key={room._id} style={{ padding: '1.25rem', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>Room {room.roomNo}</span>
-                  <span className={`badge ${room.status === 'Available' ? 'badge-available' : room.status === 'Partially Occupied' ? 'badge-partial' : 'badge-full'}`}>
-                    {room.status}
-                  </span>
-                </div>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
-                  Floor {room.floor} • Capacity: {room.capacity} Beds • <strong style={{ color: 'var(--status-available)' }}>{room.available} Free Berths</strong>
-                </p>
-
-                <div style={{ paddingTop: '0.75rem', borderTop: 'var(--glass-border)' }}>
-                  <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-subtle)', marginBottom: '0.4rem' }}>
-                    OCCUPANTS ({room.occupants?.length || 0}):
-                  </span>
-                  {(!room.occupants || room.occupants.length === 0) ? (
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Room is currently empty</span>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      {room.occupants.map((occ) => (
-                        <div key={occ.allocationId} style={{ fontSize: '0.82rem', display: 'flex', justifyContent: 'space-between', background: 'var(--bg-card-hover)', padding: '0.4rem 0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-                          <span style={{ color: 'var(--text-main)' }}><strong>Bed #{occ.bedNo}:</strong> {occ.studentName} ({occ.rollNo})</span>
-                          <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{occ.department}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+      {/* Results View Switcher & Header */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        
+        {/* Filtered Students Directory Table */}
+        <div className="glass-panel" style={{ padding: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <h3 style={{ fontSize: '1.15rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
+              <Users size={22} color="var(--accent-primary)" />
+              <span>Matching Student Directory Records ({students.length})</span>
+            </h3>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', background: 'var(--bg-card-hover)', padding: '0.25rem 0.75rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+              Search across Name, Roll No, Dept, Phone & Room
+            </span>
           </div>
-        )}
+
+          {loading ? (
+            <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>Searching student database...</p>
+          ) : students.length === 0 ? (
+            <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)', color: 'var(--text-muted)' }}>
+              No student records matched your search query "{searchTerm || 'selected filters'}".
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Dept & Year</th>
+                    <th>Phone Contact</th>
+                    <th>Hostel Status</th>
+                    <th>Assigned Room & Bed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s) => (
+                    <tr key={s._id}>
+                      <td style={{ fontWeight: 700, color: 'var(--text-main)' }}>{s.name}</td>
+                      <td>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 600, background: 'var(--bg-card-hover)', padding: '0.2rem 0.55rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}>
+                          {s.rollNo}
+                        </span>
+                      </td>
+                      <td>{s.department} — Year {s.year}</td>
+                      <td>{s.phone}</td>
+                      <td>
+                        {s.isAllocated ? (
+                          <span className="badge badge-available">Allocated</span>
+                        ) : (
+                          <span className="badge badge-full">Unallocated</span>
+                        )}
+                      </td>
+                      <td>
+                        {s.isAllocated ? (
+                          <span style={{ fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                            Room {s.allocatedRoomNo} (Bed #{s.allocatedBedNo})
+                          </span>
+                        ) : (
+                          <span style={{ color: 'var(--text-subtle)', fontStyle: 'italic' }}>Pending Allocation</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Filtered Rooms & Occupants Breakdown List */}
+        <div className="glass-panel" style={{ padding: '1.75rem' }}>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
+            <DoorClosed size={22} color="var(--accent-secondary)" />
+            <span>Matching Hostel Rooms & Occupants ({rooms.length})</span>
+          </h3>
+
+          {loading ? (
+            <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>Querying room database...</p>
+          ) : rooms.length === 0 ? (
+            <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)', color: 'var(--text-muted)' }}>
+              No room records matched your criteria.
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.25rem' }}>
+              {rooms.map((room) => (
+                <div key={room._id} style={{ padding: '1.25rem', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>Room {room.roomNo}</span>
+                    <span className={`badge ${room.status === 'Available' ? 'badge-available' : room.status === 'Partially Occupied' ? 'badge-partial' : 'badge-full'}`}>
+                      {room.status}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+                    Floor {room.floor} • Capacity: {room.capacity} Beds • <strong style={{ color: 'var(--status-available)' }}>{room.available} Free Berths</strong>
+                  </p>
+
+                  <div style={{ paddingTop: '0.75rem', borderTop: 'var(--glass-border)' }}>
+                    <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-subtle)', marginBottom: '0.4rem' }}>
+                      OCCUPANTS ({room.occupants?.length || 0}):
+                    </span>
+                    {(!room.occupants || room.occupants.length === 0) ? (
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Room is currently empty</span>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        {room.occupants.map((occ) => (
+                          <div key={occ.allocationId} style={{ fontSize: '0.82rem', display: 'flex', justifyContent: 'space-between', background: 'var(--bg-card-hover)', padding: '0.4rem 0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                            <span style={{ color: 'var(--text-main)' }}><strong>Bed #{occ.bedNo}:</strong> {occ.studentName} ({occ.rollNo})</span>
+                            <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{occ.department}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
 
     </div>
