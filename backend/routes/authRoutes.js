@@ -27,11 +27,19 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Check if database is connected
+    // Ensure database connection is ready
     if (mongoose.connection.readyState !== 1) {
+      const connectDB = require('../config/db');
+      await connectDB();
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      const isEnvSet = !!process.env.MONGODB_URI;
       return res.status(500).json({
         success: false,
-        message: 'Database is not connected. Please verify your MONGODB_URI in .env file.',
+        message: isEnvSet
+          ? 'Database connection failed. Please ensure 0.0.0.0/0 (Allow Access from Anywhere) is added to MongoDB Atlas Network Access.'
+          : 'MONGODB_URI environment variable is missing on Vercel. Please set MONGODB_URI in Vercel Project Settings -> Environment Variables.',
       });
     }
 

@@ -14,8 +14,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Database
-connectDB();
+// Middleware to ensure DB connection is ready on every request (especially Vercel serverless functions)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('DB connection middleware error:', err);
+    next();
+  }
+});
 
 // Auto seed initial admin if database is empty
 const seedInitialAdmin = async () => {

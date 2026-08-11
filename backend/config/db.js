@@ -27,13 +27,20 @@ const formatMongoUri = (uri) => {
 };
 
 const connectDB = async () => {
-  if (mongoose.connection.readyState >= 1) {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+  if (mongoose.connection.readyState === 2) {
+    await new Promise((resolve) => {
+      mongoose.connection.once('connected', resolve);
+      mongoose.connection.once('error', resolve);
+    });
     return;
   }
   try {
     const rawUri = process.env.MONGODB_URI;
     if (!rawUri) {
-      console.warn('WARNING: MONGODB_URI environment variable is not defined. Falling back to local MongoDB connection string.');
+      console.warn('WARNING: MONGODB_URI environment variable is not defined. Falling back to local connection.');
     }
 
     const connStr = formatMongoUri(rawUri);
