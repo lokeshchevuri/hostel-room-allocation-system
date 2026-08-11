@@ -359,7 +359,7 @@ export default function StudentsPage({ showToast }) {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Bindhu"
+                  placeholder="student name"
                   className="input-control"
                 />
               </div>
