@@ -77,9 +77,9 @@ export default function AdminSettingsModal({ isOpen, onClose, showToast }) {
             gap: '0.6rem',
             padding: '0.85rem 1rem',
             borderRadius: '10px',
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#ef4444',
+            background: 'var(--status-full-bg)',
+            border: '1px solid var(--status-full)',
+            color: 'var(--status-full)',
             fontSize: '0.85rem',
             marginBottom: '1.25rem'
           }}>

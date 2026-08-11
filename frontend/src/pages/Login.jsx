@@ -45,14 +45,40 @@ export default function Login() {
       justifyContent: 'center',
       padding: '1.5rem',
       backgroundColor: 'var(--bg-primary)',
-      backgroundImage: 'radial-gradient(circle at 50% 30%, var(--accent-glow) 0%, transparent 60%)'
+      backgroundImage: 'radial-gradient(var(--tech-grid-color) 1.5px, transparent 1.5px), radial-gradient(circle at 50% 30%, var(--accent-glow) 0%, transparent 65%)',
+      backgroundSize: '24px 24px, 100% 100%',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Decorative Tech Rings */}
+      <div style={{
+        position: 'absolute',
+        width: '500px',
+        height: '500px',
+        borderRadius: '50%',
+        border: '1px dashed var(--border-color)',
+        opacity: 0.4,
+        pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: '700px',
+        height: '700px',
+        borderRadius: '50%',
+        border: '1px solid var(--border-color)',
+        opacity: 0.25,
+        pointerEvents: 'none'
+      }} />
+
       <div className="glass-panel animate-fade-in" style={{
         width: '100%',
         maxWidth: '440px',
         padding: '2.5rem',
         borderRadius: '24px',
-        boxShadow: 'var(--shadow-lg)'
+        boxShadow: 'var(--shadow-lg)',
+        position: 'relative',
+        zIndex: 2,
+        background: 'var(--bg-surface)'
       }}>
         {/* Header Icon */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>

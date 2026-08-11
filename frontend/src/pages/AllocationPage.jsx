@@ -273,7 +273,7 @@ export default function AllocationPage({ showToast, setActiveTab }) {
 
             {/* Step 3: Select Bed Number */}
             {selectedRoomObj && (
-              <div className="animate-fade-in" style={{ padding: '1rem', background: 'rgba(15, 23, 42, 0.5)', borderRadius: '12px', border: 'var(--glass-border)' }}>
+              <div className="animate-fade-in" style={{ padding: '1rem', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)' }}>
                 <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--status-available)', marginBottom: '0.6rem' }}>
                   STEP 3: CHOOSE BED NUMBER IN ROOM {selectedRoomObj.roomNo}
                 </label>

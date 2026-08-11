@@ -287,9 +287,9 @@ export default function RecordsPage({ showToast }) {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.25rem' }}>
             {rooms.map((room) => (
-              <div key={room._id} style={{ padding: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '12px', border: 'var(--glass-border)' }}>
+              <div key={room._id} style={{ padding: '1.25rem', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 800 }}>Room {room.roomNo}</span>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>Room {room.roomNo}</span>
                   <span className={`badge ${room.status === 'Available' ? 'badge-available' : room.status === 'Partially Occupied' ? 'badge-partial' : 'badge-full'}`}>
                     {room.status}
                   </span>
@@ -307,8 +307,8 @@ export default function RecordsPage({ showToast }) {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                       {room.occupants.map((occ) => (
-                        <div key={occ.allocationId} style={{ fontSize: '0.82rem', display: 'flex', justifyContent: 'space-between', background: 'rgba(255, 255, 255, 0.03)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
-                          <span><strong>Bed #{occ.bedNo}:</strong> {occ.studentName} ({occ.rollNo})</span>
+                        <div key={occ.allocationId} style={{ fontSize: '0.82rem', display: 'flex', justifyContent: 'space-between', background: 'var(--bg-card-hover)', padding: '0.4rem 0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                          <span style={{ color: 'var(--text-main)' }}><strong>Bed #{occ.bedNo}:</strong> {occ.studentName} ({occ.rollNo})</span>
                           <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{occ.department}</span>
                         </div>
                       ))}

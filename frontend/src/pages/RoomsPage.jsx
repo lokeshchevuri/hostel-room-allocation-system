@@ -28,9 +28,16 @@ export default function RoomsPage({ showToast }) {
 
   // Delete Room Modal State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteFilterFloor, setDeleteFilterFloor] = useState('ALL');
   const [selectedDeleteRoomId, setSelectedDeleteRoomId] = useState('');
+  const [adminAuthPassword, setAdminAuthPassword] = useState('');
   const [deletingRoom, setDeletingRoom] = useState(false);
   const [deleteModalError, setDeleteModalError] = useState('');
+
+  const filteredDeleteRooms = rooms.filter((r) => {
+    if (deleteFilterFloor === 'ALL') return true;
+    return r.floor === parseInt(deleteFilterFloor, 10);
+  });
 
   const fetchRooms = async () => {
     try {
@@ -407,13 +414,13 @@ export default function RoomsPage({ showToast }) {
             </p>
 
             {activeOccupantRoom.occupants.length === 0 ? (
-              <div style={{ padding: '2rem', textAlign: 'center', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', color: 'var(--text-muted)' }}>
+              <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--input-bg)', borderRadius: '12px', border: 'var(--glass-border)', color: 'var(--text-muted)' }}>
                 No students currently allocated to this room.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {activeOccupantRoom.occupants.map((occ) => (
-                  <div key={occ.allocationId} style={{ padding: '0.85rem 1rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '10px', border: 'var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div key={occ.allocationId} style={{ padding: '0.85rem 1rem', background: 'var(--input-bg)', borderRadius: '10px', border: 'var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span style={{ fontWeight: 700, color: 'var(--accent-secondary)' }}>Bed #{occ.bedNo}</span>
@@ -437,11 +444,14 @@ export default function RoomsPage({ showToast }) {
         </div>
       )}
 
-      {/* Delete Room Modal */}
+      {/* Delete Room Modal with Floor Filter & Admin Password Authorization */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3 style={{ fontSize: '1.3rem', marginBottom: '1.25rem', color: 'var(--text-main)' }}>Delete Hostel Room</h3>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '0.4rem', color: 'var(--text-main)' }}>Delete Hostel Room</h3>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+              Select floor to auto-filter rooms, choose an unoccupied room, and authorize with admin password.
+            </p>
 
             {deleteModalError && (
               <div style={{
@@ -463,6 +473,10 @@ export default function RoomsPage({ showToast }) {
                 setDeleteModalError('Please select a room to delete');
                 return;
               }
+              if (!adminAuthPassword || adminAuthPassword.trim() === '') {
+                setDeleteModalError('Please enter admin password to authorize deletion');
+                return;
+              }
               const targetRoom = rooms.find(r => r._id === selectedDeleteRoomId);
               if (!targetRoom) return;
               if (targetRoom.occupied > 0) {
@@ -474,10 +488,36 @@ export default function RoomsPage({ showToast }) {
               setDeletingRoom(false);
               setIsDeleteModalOpen(false);
               setSelectedDeleteRoomId('');
-            }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              setAdminAuthPassword('');
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+              
+              {/* Step 1: Select Floor */}
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
-                  SELECT ROOM TO DELETE *
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
+                  1. SELECT FLOOR TO FILTER ROOMS
+                </label>
+                <select
+                  value={deleteFilterFloor}
+                  onChange={(e) => {
+                    setDeleteFilterFloor(e.target.value);
+                    setSelectedDeleteRoomId('');
+                    setDeleteModalError('');
+                  }}
+                  className="input-control select-control"
+                >
+                  <option value="ALL">All Floors ({rooms.length} Rooms)</option>
+                  <option value="0">Ground Floor</option>
+                  <option value="1">1st Floor</option>
+                  <option value="2">2nd Floor</option>
+                  <option value="3">3rd Floor</option>
+                  <option value="4">4th Floor</option>
+                </select>
+              </div>
+
+              {/* Step 2: Auto-filtered Rooms List Dropdown */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
+                  2. SELECT ROOM TO DELETE *
                 </label>
                 <select
                   required
@@ -485,21 +525,36 @@ export default function RoomsPage({ showToast }) {
                   onChange={(e) => { setSelectedDeleteRoomId(e.target.value); setDeleteModalError(''); }}
                   className="input-control select-control"
                 >
-                  <option value="">-- Choose a Room --</option>
-                  {rooms.map((r) => (
+                  <option value="">-- Choose Room ({filteredDeleteRooms.length} rooms available on this floor) --</option>
+                  {filteredDeleteRooms.map((r) => (
                     <option key={r._id} value={r._id} disabled={r.occupied > 0}>
-                      Room {r.roomNo} (Floor {r.floor}) - {r.occupied > 0 ? `Occupied (${r.occupied} beds)` : 'Unoccupied (Can Delete)'}
+                      Room {r.roomNo} (Floor {r.floor}) — {r.capacity} Beds ({r.occupied > 0 ? `Occupied: ${r.occupied} beds` : 'Unoccupied - Ready to delete'})
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
-                <button type="button" onClick={() => setIsDeleteModalOpen(false)} className="btn btn-secondary">
+              {/* Step 3: Admin Password Authorization */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem', letterSpacing: '0.03em' }}>
+                  3. ENTER ADMIN PASSWORD *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={adminAuthPassword}
+                  onChange={(e) => { setAdminAuthPassword(e.target.value); setDeleteModalError(''); }}
+                  placeholder="Enter your admin password"
+                  className="input-control"
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <button type="button" onClick={() => { setIsDeleteModalOpen(false); setAdminAuthPassword(''); }} className="btn btn-secondary">
                   Cancel
                 </button>
-                <button type="submit" disabled={deletingRoom || !selectedDeleteRoomId} className="btn btn-danger">
-                  {deletingRoom ? 'Deleting...' : 'Confirm Delete Room'}
+                <button type="submit" disabled={deletingRoom || !selectedDeleteRoomId || !adminAuthPassword} className="btn btn-danger">
+                  {deletingRoom ? 'Deleting...' : 'Authorize & Delete Room'}
                 </button>
               </div>
             </form>
