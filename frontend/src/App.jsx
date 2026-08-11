@@ -14,6 +14,7 @@ export default function App() {
   const { admin, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState(localStorage.getItem('hostel_theme') || 'dark');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   // Toast notifications array
   const [toasts, setToasts] = useState([]);
@@ -25,6 +26,10 @@ export default function App() {
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
   };
 
   const showToast = (message, type = 'success') => {
@@ -53,7 +58,7 @@ export default function App() {
           <div style={{
             width: '48px',
             height: '48px',
-            border: '4px solid rgba(99, 102, 241, 0.2)',
+            border: '4px solid rgba(16, 185, 129, 0.2)',
             borderTopColor: 'var(--accent-primary)',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
@@ -91,13 +96,13 @@ export default function App() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       
       {/* Top Navbar */}
-      <Navbar currentTheme={theme} toggleTheme={toggleTheme} />
+      <Navbar currentTheme={theme} toggleTheme={toggleTheme} isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} showToast={showToast} />
 
       {/* Main Workspace Layout */}
-      <div style={{ display: 'flex', flex: 1, maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', flex: 1, maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem', gap: '1.5rem', position: 'relative' }}>
         
         {/* Sidebar */}
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isSidebarOpen={isSidebarOpen} />
 
         {/* Content Area */}
         <main style={{ flex: 1, minWidth: 0 }}>

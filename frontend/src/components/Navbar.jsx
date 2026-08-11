@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import AdminSettingsModal from './AdminSettingsModal';
-import { Building2, LogOut, ShieldCheck, Sun, Moon, Settings } from 'lucide-react';
+import { Building2, LogOut, ShieldCheck, Sun, Moon, Settings, Menu, X } from 'lucide-react';
 
-export default function Navbar({ currentTheme, toggleTheme, showToast }) {
+export default function Navbar({ currentTheme, toggleTheme, isSidebarOpen, toggleSidebar, showToast }) {
   const { admin, logout } = useContext(AuthContext);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -12,7 +12,7 @@ export default function Navbar({ currentTheme, toggleTheme, showToast }) {
       <header style={{
         backgroundColor: 'var(--bg-surface)',
         borderBottom: 'var(--glass-border)',
-        padding: '0.8rem 2rem',
+        padding: '0.8rem 1.5rem',
         position: 'sticky',
         top: 0,
         zIndex: 100,
@@ -20,32 +20,43 @@ export default function Navbar({ currentTheme, toggleTheme, showToast }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '1400px', margin: '0 auto' }}>
           
-          {/* Brand Header */}
+          {/* Brand Header with Sidebar Toggle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            
+            {/* Sidebar Toggle Button */}
+            <button
+              onClick={toggleSidebar}
+              className="btn btn-secondary btn-sm"
+              style={{ borderRadius: '10px', width: '38px', height: '38px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              title={isSidebarOpen ? "Collapse Sidebar" : "Open Sidebar Menu"}
+            >
+              {isSidebarOpen ? <X size={20} color="var(--accent-primary)" /> : <Menu size={20} color="var(--accent-primary)" />}
+            </button>
+
             <div style={{
-              background: 'var(--accent-primary)',
+              background: 'var(--accent-gradient)',
               width: '40px',
               height: '40px',
-              borderRadius: '10px',
+              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: '0 4px 12px var(--accent-glow)'
             }}>
               <Building2 size={22} color="#ffffff" />
             </div>
             <div>
-              <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
+              <h1 style={{ fontSize: '1.15rem', margin: 0, fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
                 HOSTEL ALLOCATION SYSTEM
               </h1>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', margin: 0, fontWeight: 500 }}>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-subtle)', margin: 0, fontWeight: 500 }}>
                 Campus Administration Portal
               </p>
             </div>
           </div>
 
           {/* Admin Profile & Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
             
             {/* Theme Toggle Button */}
             <button
@@ -54,7 +65,7 @@ export default function Navbar({ currentTheme, toggleTheme, showToast }) {
               style={{ borderRadius: '50%', width: '38px', height: '38px', padding: 0 }}
               title={`Switch to ${currentTheme === 'dark' ? 'Light' : 'Dark'} Mode`}
             >
-              {currentTheme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#2563eb" />}
+              {currentTheme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#10b981" />}
             </button>
 
             {/* Admin Profile & Account Settings Button */}

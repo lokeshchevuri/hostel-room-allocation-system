@@ -45,29 +45,31 @@ export default function Login() {
       justifyContent: 'center',
       padding: '1.5rem',
       backgroundColor: 'var(--bg-primary)',
+      backgroundImage: 'radial-gradient(circle at 50% 30%, var(--accent-glow) 0%, transparent 60%)'
     }}>
       <div className="glass-panel animate-fade-in" style={{
         width: '100%',
-        maxWidth: '430px',
+        maxWidth: '440px',
         padding: '2.5rem',
+        borderRadius: '24px',
         boxShadow: 'var(--shadow-lg)'
       }}>
         {/* Header Icon */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '14px',
-            background: 'var(--accent-primary)',
+            width: '60px',
+            height: '60px',
+            borderRadius: '18px',
+            background: 'var(--accent-gradient)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 1rem',
-            boxShadow: 'var(--shadow-md)'
+            margin: '0 auto 1.25rem',
+            boxShadow: '0 8px 20px var(--accent-glow)'
           }}>
-            <Building2 size={28} color="#ffffff" />
+            <Building2 size={30} color="#ffffff" />
           </div>
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.3rem', color: 'var(--text-main)' }}>
+          <h2 style={{ fontSize: '1.65rem', marginBottom: '0.35rem', color: 'var(--text-main)', fontWeight: 700 }}>
             Hostel Portal Login
           </h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
@@ -82,7 +84,7 @@ export default function Login() {
             alignItems: 'center',
             gap: '0.6rem',
             padding: '0.85rem 1rem',
-            borderRadius: '10px',
+            borderRadius: '12px',
             background: 'var(--status-full-bg)',
             border: '1px solid var(--status-full)',
             color: 'var(--status-full)',
@@ -157,7 +159,7 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className="btn btn-primary"
-            style={{ width: '100%', padding: '0.8rem', marginTop: '0.5rem', fontSize: '0.95rem' }}
+            style={{ width: '100%', padding: '0.85rem', marginTop: '0.5rem', fontSize: '0.95rem', borderRadius: '14px' }}
           >
             {loading ? 'Authenticating...' : (
               <>
