@@ -13,7 +13,7 @@ import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 export default function App() {
   const { admin, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [theme, setTheme] = useState(localStorage.getItem('hostel_theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem('hostel_theme') || 'light');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   // Toast notifications array
