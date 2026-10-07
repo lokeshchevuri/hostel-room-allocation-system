@@ -99,16 +99,19 @@ export default function App() {
       <Navbar currentTheme={theme} toggleTheme={toggleTheme} isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} showToast={showToast} />
 
       {/* Main Workspace Layout */}
-      <div style={{ display: 'flex', flex: 1, maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem', gap: '1.5rem', position: 'relative' }}>
-        
-        {/* Sidebar */}
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isSidebarOpen={isSidebarOpen} />
+<div style={{ display: 'flex', flex: 1, width: '100%', position: 'relative' }}>
+  
+  {/* Sidebar is now flush against the left edge */}
+  <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isSidebarOpen={isSidebarOpen} />
 
-        {/* Content Area */}
-        <main style={{ flex: 1, minWidth: 0 }}>
-          {renderActivePage()}
-        </main>
-      </div>
+  {/* Content Area wraps the centered page content */}
+  <main style={{ flex: 1, minWidth: 0, padding: '1.5rem 1rem' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+      {renderActivePage()}
+    </div>
+  </main>
+
+</div>
 
       {/* Toast Notification Container */}
       <div className="toast-container">
