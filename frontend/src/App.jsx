@@ -101,17 +101,23 @@ export default function App() {
       {/* Main Workspace Layout */}
 <div style={{ display: 'flex', flex: 1, width: '100%', position: 'relative' }}>
   
-  {/* Sidebar is now flush against the left edge */}
-  <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isSidebarOpen={isSidebarOpen} />
+  {/* Pass toggleSidebar prop here */}
+  <Sidebar 
+    activeTab={activeTab} 
+    setActiveTab={setActiveTab} 
+    isSidebarOpen={isSidebarOpen} 
+    toggleSidebar={toggleSidebar}
+  />
 
-  {/* Content Area wraps the centered page content */}
+  {/* Content Area */}
   <main style={{ flex: 1, minWidth: 0, padding: '1.5rem 1rem' }}>
     <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
       {renderActivePage()}
     </div>
   </main>
-
 </div>
+
+
 
       {/* Toast Notification Container */}
       <div className="toast-container">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutDashboard, Users, DoorClosed, Key, Search } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen }) {
+export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, toggleSidebar }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'students', label: 'Students', icon: Users },
@@ -9,6 +9,16 @@ export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen }) {
     { id: 'allocation', label: 'Room Allocation', icon: Key },
     { id: 'records', label: 'Advanced Search', icon: Search },
   ];
+
+  const handleNavClick = (id) => {
+    setActiveTab(id);
+
+    // Check if the screen width is half-screen / mobile (e.g., less than 1024px)
+    // Adjust 1024 to whatever breakpoint your overlay layout starts at
+    if (window.innerWidth < 1024 && toggleSidebar) {
+      toggleSidebar();
+    }
+  };
 
   return (
     <aside
@@ -48,7 +58,7 @@ export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen }) {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleNavClick(item.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
